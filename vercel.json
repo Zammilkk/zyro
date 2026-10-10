@@ -3,7 +3,6 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
@@ -17,12 +16,6 @@
           "value": "same-origin"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/editor",
-      "destination": "/"
     }
   ]
 }
