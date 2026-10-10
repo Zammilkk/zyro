@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /bulk
+Disallow: /editor
+
+Sitemap: https://www.imagesresizer.click/sitemap.xml

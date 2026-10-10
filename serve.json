@@ -18,8 +18,5 @@
       ]
     }
   ],
-  "redirects": [
-    { "source": "/editor", "destination": "/" },
-    { "source": "/bulk", "destination": "/" }
-  ]
+  "cleanUrls": true
 }

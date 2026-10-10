@@ -23,20 +23,29 @@ import Intro from 'shared/prerendered-app/Intro';
 import snackbarCss from 'css:../../../shared/custom-els/snack-bar/styles.css';
 import * as snackbarStyle from '../../../shared/custom-els/snack-bar/styles.css';
 
-interface Props {}
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  robots?: string;
+}
 
-const Index: FunctionalComponent<Props> = () => (
+const Index: FunctionalComponent<Props> = ({
+  title = 'Free Image Resizer & Compressor Online | Zyro Pro',
+  description = 'Resize, compress, crop, and convert images online with Zyro Pro. Optimize multiple images in your browser and download your results for free.',
+  canonicalUrl = `${siteOrigin}/`,
+  robots,
+}) => (
   <html lang="en">
     <head>
-      <title>Zyro Pro</title>
-      <meta
-        name="description"
-        content="Zyro Pro is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser."
-      />
+      <title>{title}</title>
+      {description ? <meta name="description" content={description} /> : null}
+      {robots ? <meta name="robots" content={robots} /> : null}
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@ZyroPro" />
-      <meta property="og:title" content="Zyro Pro" />
+      <meta property="og:title" content={title} />
       <meta property="og:type" content="website" />
+      <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={`${siteOrigin}${ogImage}`} />
       <meta
         property="og:image:secure_url"
@@ -47,12 +56,11 @@ const Index: FunctionalComponent<Props> = () => (
       <meta property="og:image:height" content="500" />
       <meta
         property="og:image:alt"
-        content="A cartoon of a hand squeezing an image file on a dark background."
+        content="Zyro Pro - Free Image Resizer & Compressor Online"
       />
-      <meta
-        name="og:description"
-        content="Squoosh is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser."
-      />
+      {description ? (
+        <meta property="og:description" content={description} />
+      ) : null}
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
@@ -64,7 +72,7 @@ const Index: FunctionalComponent<Props> = () => (
       <link rel="apple-touch-icon" href={ogImage} />
       <meta name="theme-color" content="#ff3385" />
       <link rel="manifest" href="/manifest.json" />
-      <link rel="canonical" href={siteOrigin} />
+      <link rel="canonical" href={canonicalUrl} />
       <style
         dangerouslySetInnerHTML={{ __html: escapeStyleScriptContent(baseCss) }}
       />

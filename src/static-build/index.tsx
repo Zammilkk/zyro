@@ -53,7 +53,53 @@ interface Output {
 }
 
 const toOutput: Output = {
-  'index.html': renderPage(<IndexPage />),
+  'index.html': renderPage(
+    <IndexPage
+      title="Free Image Resizer & Compressor Online | Zyro Pro"
+      description="Resize, compress, crop, and convert images online with Zyro Pro. Optimize multiple images in your browser and download your results for free."
+      canonicalUrl="https://www.imagesresizer.click/"
+      robots="index, follow"
+    />,
+  ),
+  'bulk/index.html': renderPage(
+    <IndexPage
+      title="Bulk Image Resizer & Compressor Online | Zyro Pro"
+      description="Resize and compress multiple images online with Zyro Pro. Choose supported output formats, adjust quality, and download optimized images in bulk."
+      canonicalUrl="https://www.imagesresizer.click/bulk"
+      robots="index, follow"
+    />,
+  ),
+  'editor/index.html': renderPage(
+    <IndexPage
+      title="Image Editor – Resize, Crop & Compress | Zyro Pro"
+      description="Resize, crop, and compress images online with Zyro Pro in your browser."
+      canonicalUrl="https://www.imagesresizer.click/editor"
+      robots="noindex, follow"
+    />,
+  ),
+  'robots.txt': dedent`
+    User-agent: *
+    Allow: /
+    Allow: /bulk
+    Disallow: /editor
+
+    Sitemap: https://www.imagesresizer.click/sitemap.xml
+  `,
+  'sitemap.xml': dedent`
+    <?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://www.imagesresizer.click/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+      </url>
+      <url>
+        <loc>https://www.imagesresizer.click/bulk</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+      </url>
+    </urlset>
+  `,
   'manifest.json': JSON.stringify({
     name: 'Zyro Pro',
     short_name: 'Zyro Pro',
@@ -76,7 +122,7 @@ const toOutput: Output = {
       },
     ],
     description:
-      'Compress and compare images with different codecs, right in your browser.',
+      'Free Image Resizer & Compressor Online. Resize, compress, crop, and convert images with Zyro Pro.',
     lang: 'en',
     categories: ['photo', 'productivity', 'utilities'],
     screenshots,

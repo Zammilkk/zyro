@@ -278,14 +278,14 @@ function processorStateEquivalent(a: ProcessorState, b: ProcessorState) {
 
 const loadingIndicator = '⏳ ';
 
-const originalDocumentTitle = document.title;
+const editorDocumentTitle = 'Image Editor – Resize, Crop & Compress | Zyro Pro';
 
 function updateDocumentTitle(loadingFileInfo: LoadingFileInfo): void {
   const { loading, filename } = loadingFileInfo;
   let title = '';
   if (loading) title += loadingIndicator;
   if (filename) title += filename + ' - ';
-  title += originalDocumentTitle;
+  title += editorDocumentTitle;
   document.title = title;
 }
 

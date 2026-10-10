@@ -15,6 +15,10 @@ import 'shared/custom-els/loading-spinner';
 const ROUTE_EDITOR = '/editor';
 const ROUTE_BULK = '/bulk';
 
+const TITLE_HOME = 'Free Image Resizer & Compressor Online | Zyro Pro';
+const TITLE_BULK = 'Bulk Image Resizer & Compressor Online | Zyro Pro';
+const TITLE_EDITOR = 'Image Editor – Resize, Crop & Compress | Zyro Pro';
+
 const compressPromise = import('client/lazy-app/Compress');
 const bulkPromise = import('client/lazy-app/BulkOptimize');
 const swBridgePromise = import('client/lazy-app/sw-bridge');
@@ -84,7 +88,22 @@ export default class App extends Component<Props, State> {
     });
 
     window.addEventListener('popstate', this.onPopState);
+    this.updateTitle(this.state.isEditorOpen, this.state.isBulkOpen);
   }
+
+  private updateTitle = (
+    isEditorOpen: boolean,
+    isBulkOpen: boolean,
+    file?: File,
+  ) => {
+    if (isBulkOpen) {
+      document.title = TITLE_BULK;
+    } else if (isEditorOpen) {
+      document.title = file ? `${file.name} - ${TITLE_EDITOR}` : TITLE_EDITOR;
+    } else {
+      document.title = TITLE_HOME;
+    }
+  };
 
   private onFileDrop = ({ files }: FileDropEvent) => {
     if (!files || files.length === 0) return;
@@ -119,6 +138,7 @@ export default class App extends Component<Props, State> {
   private onPopState = () => {
     const isEditorOpen = location.pathname === ROUTE_EDITOR;
     const isBulkOpen = location.pathname === ROUTE_BULK;
+    this.updateTitle(isEditorOpen, isBulkOpen, this.state.file);
     this.setState({ isEditorOpen, isBulkOpen });
   };
 
@@ -128,10 +148,12 @@ export default class App extends Component<Props, State> {
     if (location.pathname !== ROUTE_EDITOR) {
       history.pushState(null, '', editorURL.href);
     }
+    const targetFile = file || this.state.file;
+    this.updateTitle(true, false, targetFile);
     this.setState({
       isEditorOpen: true,
       isBulkOpen: false,
-      file: file || this.state.file,
+      file: targetFile,
     });
   };
 
@@ -141,6 +163,7 @@ export default class App extends Component<Props, State> {
     if (location.pathname !== ROUTE_BULK) {
       history.pushState(null, '', bulkURL.href);
     }
+    this.updateTitle(false, true);
     this.setState({
       isBulkOpen: true,
       isEditorOpen: false,
@@ -154,6 +177,7 @@ export default class App extends Component<Props, State> {
     if (location.pathname !== '/') {
       history.pushState(null, '', homeURL.href);
     }
+    this.updateTitle(false, false);
     this.setState({
       isBulkOpen: false,
       isEditorOpen: false,
