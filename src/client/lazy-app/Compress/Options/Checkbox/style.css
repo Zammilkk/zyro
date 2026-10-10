@@ -1,0 +1,33 @@
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  --size: 20px;
+  cursor: pointer;
+}
+
+.real-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.icon {
+  display: block;
+  width: var(--size);
+  height: var(--size);
+  fill: #64748b;
+  transition: fill 0.2s;
+}
+
+.checked {
+  fill: #8b5cf6;
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6));
+}
+
+.disabled {
+  fill: rgba(255, 255, 255, 0.2);
+}

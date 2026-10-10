@@ -1,0 +1,42 @@
+.select {
+  position: relative;
+  width: 100%;
+}
+
+.builtin-select {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 14px;
+  padding-right: 32px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  fill: #94a3b8;
+  width: 10px;
+  pointer-events: none;
+}
+
+.large {
+  padding: 12px 35px 12px 14px;
+}
