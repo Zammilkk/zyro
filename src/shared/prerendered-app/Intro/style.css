@@ -73,6 +73,31 @@
   margin-top: 6px;
 }
 
+.bulk-badge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(56, 189, 248, 0.25));
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.35);
+  transition: all 0.25s ease;
+  z-index: 10;
+}
+
+.bulk-badge-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  border-color: #a855f7;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(56, 189, 248, 0.4));
+  box-shadow: 0 6px 24px rgba(168, 85, 247, 0.6);
+}
+
 .hero-stage {
   position: relative;
   width: 100%;

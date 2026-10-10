@@ -69,6 +69,7 @@ interface Props {
   file: File;
   showSnack: SnackBarElement['showSnackbar'];
   onBack: () => void;
+  onOpenBulk?: () => void;
 }
 
 interface State {
@@ -738,7 +739,10 @@ export default class Compress extends Component<Props, State> {
     if (immediate) {
       this.updateImage();
     } else {
-      this.updateImageTimeout = setTimeout(() => this.updateImage(), delay);
+      this.updateImageTimeout = self.setTimeout(
+        () => this.updateImage(),
+        delay,
+      ) as unknown as number;
     }
   }
 
@@ -1332,6 +1336,28 @@ export default class Compress extends Component<Props, State> {
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
               </svg>
             </button>
+            {this.props.onOpenBulk && (
+              <button
+                type="button"
+                class={style.topBulkBtn}
+                title="Switch to Bulk Image Optimizer"
+                onClick={this.props.onOpenBulk}
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span>Bulk Mode</span>
+              </button>
+            )}
             <a
               class={`${style.topDownloadBtn} ${
                 rightSide.loading || !rightSide.downloadUrl

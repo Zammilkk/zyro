@@ -111,6 +111,30 @@
   }
 }
 
+.top-bulk-btn {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(168, 85, 247, 0.25);
+    border-color: #a855f7;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+    transform: translateY(-1px);
+  }
+}
+
 .top-download-btn {
   height: 38px;
   padding: 0 20px;

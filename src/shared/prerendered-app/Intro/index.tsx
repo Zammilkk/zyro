@@ -72,6 +72,8 @@ async function getImageClipboardItem(
 
 interface Props {
   onFile?: (file: File) => void;
+  onFiles?: (files: File[]) => void;
+  onOpenBulk?: () => void;
   showSnack?: SnackBarElement['showSnackbar'];
 }
 interface State {
@@ -144,10 +146,14 @@ export default class Intro extends Component<Props, State> {
 
   private onFileChange = (event: Event): void => {
     const fileInput = event.target as HTMLInputElement;
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) return;
+    const files = fileInput.files;
+    if (!files || files.length === 0) return;
     this.fileInput!.value = '';
-    this.props.onFile!(file);
+    if (files.length > 1 && this.props.onFiles) {
+      this.props.onFiles(Array.from(files));
+    } else if (this.props.onFile) {
+      this.props.onFile(files[0]);
+    }
   };
 
   private onOpenClick = () => {
@@ -257,6 +263,7 @@ export default class Intro extends Component<Props, State> {
           class={style.hide}
           ref={linkRef(this, 'fileInput')}
           type="file"
+          multiple
           onChange={this.onFileChange}
         />
         <div class={style.main}>
@@ -272,6 +279,19 @@ export default class Intro extends Component<Props, State> {
               <span class={style.titleGradient}>Pro</span>
             </h1>
             <div class={style.titleUnderline}></div>
+            {this.props.onOpenBulk && (
+              <button
+                type="button"
+                class={style.bulkBadgeBtn}
+                onClick={this.props.onOpenBulk}
+                title="Batch optimize multiple images at once"
+              >
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                ⚡ Bulk Image Optimize
+              </button>
+            )}
           </div>
 
           <div class={style.heroStage}>
