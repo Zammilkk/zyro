@@ -1,4 +1,4 @@
-define(['require', 'exports', './initial-app-b9185c19', './comlink-f3ac916c'], function (require, exports, index, comlink) { 'use strict';
+define(['require', 'exports', './initial-app-32458f6e', './comlink-f3ac916c'], function (require, exports, index, comlink) { 'use strict';
 
     var css = "._select_oa9oz_1{position:relative;width:100%}._builtin-select_oa9oz_6{background:rgba(30,41,59,.85);border:1px solid hsla(0,0%,100%,.12);border-radius:10px;font:inherit;font-size:14px;font-weight:500;padding:10px 32px 10px 14px;-webkit-appearance:none;-moz-appearance:none;color:#fff;width:100%;box-sizing:border-box;outline:none;cursor:pointer;transition:all .2s ease}._builtin-select_oa9oz_6:focus{border-color:#8b5cf6;box-shadow:0 0 0 2px rgba(139,92,246,.3)}._arrow_oa9oz_30{position:absolute;right:14px;top:50%;transform:translateY(-50%);fill:#94a3b8;width:10px;pointer-events:none}._large_oa9oz_40{padding:12px 35px 12px 14px}";
 

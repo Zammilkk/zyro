@@ -1,4 +1,4 @@
-define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './util-3d88c3bb', './comlink-f3ac916c'], function (require, exports, index, index$1, util, comlink) { 'use strict';
+define(['require', 'exports', './initial-app-32458f6e', './index-636425fe', './util-3d88c3bb', './comlink-f3ac916c'], function (require, exports, index, index$1, util, comlink) { 'use strict';
 
     const compress = "_compress_mjt0z_1";
     const topBar = "_top-bar_mjt0z_19";
@@ -1748,11 +1748,10 @@ define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './u
             const downloadUrl = state.sides[i].downloadUrl;
             if (downloadUrl)
                 URL.revokeObjectURL(downloadUrl);
-            newState = cleanMerge(state, `sides.${i}`, {
-                preprocessed: undefined,
+            newState = cleanMerge(newState, `sides.${i}`, {
+                processed: undefined,
                 file: undefined,
                 downloadUrl: undefined,
-                data: undefined,
                 encodedSettings: undefined,
             });
         }
@@ -2189,7 +2188,16 @@ define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './u
          * decides which steps can be skipped, and which can be cached.
          */
         async updateImage() {
+            if (!this.sourceFile)
+                return;
             const currentState = this.state;
+            // If a main job is already processing this exact file and preprocessor settings, wait for it.
+            if (this.activeMainJob) {
+                if (this.activeMainJob.file === this.sourceFile &&
+                    this.activeMainJob.preprocessorState === currentState.preprocessorState) {
+                    return;
+                }
+            }
             // State of the last completed job, or ongoing job
             const latestMainJobState = this.activeMainJob || {
                 file: currentState.source && currentState.source.file,
@@ -2212,8 +2220,9 @@ define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './u
                 encoderState: side.latestSettings.encoderState,
             }));
             // Figure out what needs doing:
-            const needsDecoding = latestMainJobState.file != mainJobState.file;
+            const needsDecoding = !currentState.source || latestMainJobState.file !== mainJobState.file;
             const needsPreprocessing = needsDecoding ||
+                !currentState.source ||
                 latestMainJobState.preprocessorState !== mainJobState.preprocessorState;
             const sideWorksNeeded = latestSideJobStates.map((latestSideJob, i) => {
                 const needsProcessing = needsPreprocessing ||
@@ -2294,6 +2303,8 @@ define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './u
                 }
             }
             else {
+                if (!currentState.source)
+                    return;
                 ({ decoded, vectorImage } = currentState.source);
             }
             let source;
@@ -2348,6 +2359,8 @@ define(['require', 'exports', './initial-app-b9185c19', './index-b6db047a', './u
                 }
             }
             else {
+                if (!currentState.source)
+                    return;
                 source = currentState.source;
             }
             // That's the main part of the job done.

@@ -146,12 +146,15 @@ export default class Intro extends Component<Props, State> {
 
   private onFileChange = (event: Event): void => {
     const fileInput = event.target as HTMLInputElement;
-    const files = fileInput.files;
-    if (!files || files.length === 0) return;
-    this.fileInput!.value = '';
+    const fileList = fileInput.files;
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList);
+    if (this.fileInput) {
+      this.fileInput.value = '';
+    }
     if (files.length > 1 && this.props.onFiles) {
-      this.props.onFiles(Array.from(files));
-    } else if (this.props.onFile) {
+      this.props.onFiles(files);
+    } else if (this.props.onFile && files[0]) {
       this.props.onFile(files[0]);
     }
   };

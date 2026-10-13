@@ -214,11 +214,10 @@ function stateForNewSourceData(state: State): State {
     const downloadUrl = state.sides[i].downloadUrl;
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
 
-    newState = cleanMerge(state, `sides.${i}`, {
-      preprocessed: undefined,
+    newState = cleanMerge(newState, `sides.${i}`, {
+      processed: undefined,
       file: undefined,
       downloadUrl: undefined,
-      data: undefined,
       encodedSettings: undefined,
     });
   }
@@ -760,7 +759,19 @@ export default class Compress extends Component<Props, State> {
    * decides which steps can be skipped, and which can be cached.
    */
   private async updateImage() {
+    if (!this.sourceFile) return;
+
     const currentState = this.state;
+
+    // If a main job is already processing this exact file and preprocessor settings, wait for it.
+    if (this.activeMainJob) {
+      if (
+        this.activeMainJob.file === this.sourceFile &&
+        this.activeMainJob.preprocessorState === currentState.preprocessorState
+      ) {
+        return;
+      }
+    }
 
     // State of the last completed job, or ongoing job
     const latestMainJobState: Partial<MainJob> = this.activeMainJob || {
@@ -791,9 +802,11 @@ export default class Compress extends Component<Props, State> {
     }));
 
     // Figure out what needs doing:
-    const needsDecoding = latestMainJobState.file != mainJobState.file;
+    const needsDecoding =
+      !currentState.source || latestMainJobState.file !== mainJobState.file;
     const needsPreprocessing =
       needsDecoding ||
+      !currentState.source ||
       latestMainJobState.preprocessorState !== mainJobState.preprocessorState;
     const sideWorksNeeded = latestSideJobStates.map((latestSideJob, i) => {
       const needsProcessing =
@@ -889,7 +902,8 @@ export default class Compress extends Component<Props, State> {
         throw err;
       }
     } else {
-      ({ decoded, vectorImage } = currentState.source!);
+      if (!currentState.source) return;
+      ({ decoded, vectorImage } = currentState.source);
     }
 
     let source: SourceImage;
@@ -948,7 +962,8 @@ export default class Compress extends Component<Props, State> {
         throw err;
       }
     } else {
-      source = currentState.source!;
+      if (!currentState.source) return;
+      source = currentState.source;
     }
 
     // That's the main part of the job done.

@@ -44,7 +44,7 @@ export default class App extends Component<Props, State> {
     awaitingShareTarget: new URL(location.href).searchParams.has(
       'share-target',
     ),
-    isEditorOpen: location.pathname === ROUTE_EDITOR,
+    isEditorOpen: false,
     isBulkOpen: location.pathname === ROUTE_BULK,
     file: undefined,
     bulkFiles: undefined,
@@ -87,6 +87,9 @@ export default class App extends Component<Props, State> {
       event.preventDefault();
     });
 
+    if (location.pathname === ROUTE_EDITOR && !this.state.file) {
+      history.replaceState(null, '', '/');
+    }
     window.addEventListener('popstate', this.onPopState);
     this.updateTitle(this.state.isEditorOpen, this.state.isBulkOpen);
   }
@@ -136,19 +139,25 @@ export default class App extends Component<Props, State> {
   };
 
   private onPopState = () => {
-    const isEditorOpen = location.pathname === ROUTE_EDITOR;
+    const hasFile = Boolean(this.state.file);
+    const isEditorOpen = location.pathname === ROUTE_EDITOR && hasFile;
     const isBulkOpen = location.pathname === ROUTE_BULK;
+    if (location.pathname === ROUTE_EDITOR && !hasFile) {
+      history.replaceState(null, '', '/');
+    }
     this.updateTitle(isEditorOpen, isBulkOpen, this.state.file);
     this.setState({ isEditorOpen, isBulkOpen });
   };
 
   private openEditor = (file?: File) => {
+    const targetFile = file || this.state.file;
+    if (!targetFile) return;
+
     const editorURL = new URL(location.href);
     editorURL.pathname = ROUTE_EDITOR;
     if (location.pathname !== ROUTE_EDITOR) {
       history.pushState(null, '', editorURL.href);
     }
-    const targetFile = file || this.state.file;
     this.updateTitle(true, false, targetFile);
     this.setState({
       isEditorOpen: true,
@@ -207,13 +216,13 @@ export default class App extends Component<Props, State> {
                 onHome={this.goHome}
               />
             )
-          ) : isEditorOpen ? (
+          ) : isEditorOpen && file ? (
             Compress && (
               <Compress
-                file={file!}
+                file={file}
                 showSnack={this.showSnack}
-                onBack={back}
-                onOpenBulk={() => this.openBulk(file ? [file] : [])}
+                onBack={this.goHome}
+                onOpenBulk={() => this.openBulk([file])}
               />
             )
           ) : (

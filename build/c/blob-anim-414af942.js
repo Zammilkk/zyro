@@ -1,4 +1,4 @@
-define(['exports', './initial-app-b9185c19'], function (exports, index) { 'use strict';
+define(['exports', './initial-app-32458f6e'], function (exports, index) { 'use strict';
 
     /** Start points, for the shape we use in prerender */
     const startBlobs = [

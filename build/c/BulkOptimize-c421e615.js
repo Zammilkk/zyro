@@ -1,4 +1,4 @@
-define(["exports","./initial-app-cfbba832","./index-5122e069","./comlink-f3ac916c"],(function(e,t,r,i){var n="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function a(e){throw new Error('Could not dynamically require "'+e+'". Please configure the dynamicRequireTargets option of @rollup/plugin-commonjs appropriately for this require call to behave properly.')}
+define(["exports","./initial-app-2addb099","./index-bde10aa7","./comlink-f3ac916c"],(function(e,t,r,i){var n="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function a(e){throw new Error('Could not dynamically require "'+e+'". Please configure the dynamicRequireTargets option of @rollup/plugin-commonjs appropriately for this require call to behave properly.')}
 /*!
 
 	JSZip v3.10.2 - A JavaScript class for generating and reading zip files

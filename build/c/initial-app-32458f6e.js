@@ -336,7 +336,7 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
     ];
     const blobAnimImport =  matchMedia('(prefers-reduced-motion: reduce)').matches
         ? undefined
-        : require('./blob-anim-ac5bb24f');
+        : require('./blob-anim-414af942');
     const installButtonSource = 'introInstallButton-Purple';
      navigator.clipboard && navigator.clipboard.read;
     async function getImageClipboardItem(items) {
@@ -375,14 +375,17 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
             };
             this.onFileChange = (event) => {
                 const fileInput = event.target;
-                const files = fileInput.files;
-                if (!files || files.length === 0)
+                const fileList = fileInput.files;
+                if (!fileList || fileList.length === 0)
                     return;
-                this.fileInput.value = '';
-                if (files.length > 1 && this.props.onFiles) {
-                    this.props.onFiles(Array.from(files));
+                const files = Array.from(fileList);
+                if (this.fileInput) {
+                    this.fileInput.value = '';
                 }
-                else if (this.props.onFile) {
+                if (files.length > 1 && this.props.onFiles) {
+                    this.props.onFiles(files);
+                }
+                else if (this.props.onFile && files[0]) {
                     this.props.onFile(files[0]);
                 }
             };
@@ -546,18 +549,15 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
     const TITLE_HOME = 'Free Image Resizer & Compressor Online | Zyro Pro';
     const TITLE_BULK = 'Bulk Image Resizer & Compressor Online | Zyro Pro';
     const TITLE_EDITOR = 'Image Editor – Resize, Crop & Compress | Zyro Pro';
-    const compressPromise = require('./Compress-55009a62');
-    const bulkPromise = require('./BulkOptimize-3d14e9f4');
+    const compressPromise = require('./Compress-b0ac2c35');
+    const bulkPromise = require('./BulkOptimize-c3b71419');
     const swBridgePromise = require('./sw-bridge-32595990');
-    function back() {
-        window.history.back();
-    }
     class App extends d {
         constructor() {
             super();
             this.state = {
                 awaitingShareTarget: new URL(location.href).searchParams.has('share-target'),
-                isEditorOpen: location.pathname === ROUTE_EDITOR,
+                isEditorOpen: false,
                 isBulkOpen: location.pathname === ROUTE_BULK,
                 file: undefined,
                 bulkFiles: undefined,
@@ -603,18 +603,24 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
                 return this.snackbar.showSnackbar(message, options);
             };
             this.onPopState = () => {
-                const isEditorOpen = location.pathname === ROUTE_EDITOR;
+                const hasFile = Boolean(this.state.file);
+                const isEditorOpen = location.pathname === ROUTE_EDITOR && hasFile;
                 const isBulkOpen = location.pathname === ROUTE_BULK;
+                if (location.pathname === ROUTE_EDITOR && !hasFile) {
+                    history.replaceState(null, '', '/');
+                }
                 this.updateTitle(isEditorOpen, isBulkOpen, this.state.file);
                 this.setState({ isEditorOpen, isBulkOpen });
             };
             this.openEditor = (file) => {
+                const targetFile = file || this.state.file;
+                if (!targetFile)
+                    return;
                 const editorURL = new URL(location.href);
                 editorURL.pathname = ROUTE_EDITOR;
                 if (location.pathname !== ROUTE_EDITOR) {
                     history.pushState(null, '', editorURL.href);
                 }
-                const targetFile = file || this.state.file;
                 this.updateTitle(true, false, targetFile);
                 this.setState({
                     isEditorOpen: true,
@@ -674,6 +680,9 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
             document.body.addEventListener('gesturestart', (event) => {
                 event.preventDefault();
             });
+            if (location.pathname === ROUTE_EDITOR && !this.state.file) {
+                history.replaceState(null, '', '/');
+            }
             window.addEventListener('popstate', this.onPopState);
             this.updateTitle(this.state.isEditorOpen, this.state.isBulkOpen);
         }
@@ -683,7 +692,7 @@ define(['require', 'exports'], function (require, exports) { 'use strict';
                 (isBulkOpen && !BulkOptimize);
             return (h("div", { class: app },
                 h("file-drop", { onfiledrop: this.onFileDrop, class: drop, multiple: true },
-                    showSpinner ? (h("loading-spinner", { class: appLoader })) : isBulkOpen ? (BulkOptimize && (h(BulkOptimize, { initialFiles: bulkFiles, showSnack: this.showSnack, onBackToSingle: (f) => this.openEditor(f), onHome: this.goHome }))) : isEditorOpen ? (Compress && (h(Compress, { file: file, showSnack: this.showSnack, onBack: back, onOpenBulk: () => this.openBulk(file ? [file] : []) }))) : (h(Intro, { onFile: this.onIntroPickFile, onFiles: this.onIntroPickFiles, onOpenBulk: () => this.openBulk(), showSnack: this.showSnack })),
+                    showSpinner ? (h("loading-spinner", { class: appLoader })) : isBulkOpen ? (BulkOptimize && (h(BulkOptimize, { initialFiles: bulkFiles, showSnack: this.showSnack, onBackToSingle: (f) => this.openEditor(f), onHome: this.goHome }))) : isEditorOpen && file ? (Compress && (h(Compress, { file: file, showSnack: this.showSnack, onBack: this.goHome, onOpenBulk: () => this.openBulk([file]) }))) : (h(Intro, { onFile: this.onIntroPickFile, onFiles: this.onIntroPickFiles, onOpenBulk: () => this.openBulk(), showSnack: this.showSnack })),
                     h("snack-bar", { ref: linkRef(this, 'snackbar') }))));
         }
     }
