@@ -39,6 +39,10 @@ const Index: FunctionalComponent<Props> = ({
   <html lang="en">
     <head>
       <title>{title}</title>
+      <meta
+        name="google-site-verification"
+        content="6hoeqExI9EqpdDmbJLCGo3QAJdcHQAZuCl0Rj4KAKMw"
+      />
       {description ? <meta name="description" content={description} /> : null}
       {robots ? <meta name="robots" content={robots} /> : null}
       <meta name="twitter:card" content="summary" />
